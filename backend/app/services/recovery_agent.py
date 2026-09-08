@@ -534,9 +534,14 @@ def run_batch_recovery(
 
     # Step 1: Create all cases in DB
     for case_data in case_dicts:
+        cid = case_data.get("case_id", f"REC-{uuid.uuid4().hex[:8].upper()}")
+        existing = db.query(RecoveryCase).filter(RecoveryCase.case_id == cid).first()
+        if existing:
+            cid = f"{cid}-{uuid.uuid4().hex[:4].upper()}"
+
         case = RecoveryCase(
-            case_id=case_data["case_id"],
-            recovery_type=case_data["recovery_type"],
+            case_id=cid,
+            recovery_type=case_data.get("recovery_type", RecoveryType.PAYMENT_FAILURE),
             severity=case_data.get("severity", Severity.MEDIUM),
             amount_at_risk=Decimal(str(case_data["amount_at_risk"])),
             customer_id=case_data.get("customer_id"),

@@ -19,6 +19,7 @@ import RecoveryCommandCenter from './pages/RecoveryCommandCenter';
 import BatchRecovery from './pages/BatchRecovery';
 import RecoveryCases from './pages/RecoveryCases';
 import RecoveryCaseDetail from './pages/RecoveryCaseDetail';
+import RecoveryPriorityQueue from './pages/RecoveryPriorityQueue';
 import OperatorQueue from './pages/OperatorQueue';
 import RevenueLeakage from './pages/RevenueLeakage';
 import RecoveryIntelligence from './pages/RecoveryIntelligence';
@@ -39,6 +40,8 @@ export default function App() {
               <Route path="/signup" element={<Signup />} />
               <Route path="/operator-queue" element={<OperatorQueue />} />
               <Route path="/recovery" element={<RecoveryCommandCenter />} />
+              <Route path="/recovery/priority" element={<RecoveryPriorityQueue />} />
+              <Route path="/recovery-priority" element={<RecoveryPriorityQueue />} />
               <Route path="/live-recovery" element={<LiveRecovery />} />
               <Route path="/recovery/batch" element={<BatchRecovery />} />
               <Route path="/recovery/cases" element={<RecoveryCases />} />

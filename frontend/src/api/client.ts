@@ -180,6 +180,53 @@ export const recoveryApi = {
       method: 'POST',
       body: JSON.stringify(req)
     });
+  },
+
+  // ── AI Recovery Priority Engine Endpoints ──
+  getPriorityQueue: (params?: {
+    priority_level?: string;
+    recovery_type?: string;
+    status?: string;
+    recommended_action?: string;
+    severity?: string;
+    min_amount?: number;
+    max_amount?: number;
+    search?: string;
+    sort_by?: string;
+    sort_order?: string;
+    page?: number;
+    page_size?: number;
+  }) => {
+    const query = new URLSearchParams();
+    if (params) {
+      Object.entries(params).forEach(([k, v]) => {
+        if (v !== undefined && v !== null && v !== '' && v !== 'ALL') {
+          query.set(k, String(v));
+        }
+      });
+    }
+    const qStr = query.toString() ? `?${query.toString()}` : '';
+    return apiFetch<any>(`/api/recovery/priority-queue${qStr}`);
+  },
+
+  getPrioritySummary: () => {
+    return apiFetch<any>(`/api/recovery/priority-summary`);
+  },
+
+  getRecoverNext: () => {
+    return apiFetch<any>(`/api/recovery/recover-next`);
+  },
+
+  recalculatePriorities: () => {
+    return apiFetch<any>(`/api/recovery/recalculate-priorities`, {
+      method: 'POST'
+    });
+  },
+
+  recalculateCasePriority: (caseId: string) => {
+    return apiFetch<any>(`/api/recovery/cases/${caseId}/recalculate-priority`, {
+      method: 'POST'
+    });
   }
 };
 

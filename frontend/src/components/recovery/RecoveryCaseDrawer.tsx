@@ -196,7 +196,112 @@ export default function RecoveryCaseDrawer({
               </div>
             ) : (
               <>
-                {/* 1. Core Financial Revenue Triad */}
+                {/* 1. AI Recovery Priority & Why This Case First */}
+                <div className="p-4 bg-gradient-to-br from-slate-950 to-slate-900 rounded-2xl border border-slate-800 space-y-3.5 shadow-md">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Zap className="w-4 h-4 text-emerald-400" />
+                      <h4 className="text-xs font-bold text-slate-100 uppercase tracking-wider">
+                        Revenue Recovery Priority
+                      </h4>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className={`text-[11px] font-mono px-2.5 py-0.5 rounded-full border font-black ${
+                        caseData?.priority_level === 'P0'
+                          ? 'bg-rose-950 text-rose-300 border-rose-700'
+                          : caseData?.priority_level === 'P1'
+                          ? 'bg-amber-950 text-amber-300 border-amber-700'
+                          : caseData?.priority_level === 'P2'
+                          ? 'bg-blue-950 text-blue-300 border-blue-700'
+                          : 'bg-slate-800 text-slate-300 border-slate-700'
+                      }`}>
+                        {caseData?.priority_level || 'P2'} — {caseData?.priority_level === 'P0' ? 'CRITICAL' : caseData?.priority_level === 'P1' ? 'HIGH' : caseData?.priority_level === 'P2' ? 'MEDIUM' : 'LOW'}
+                      </span>
+                      <span className="text-xs font-mono font-bold text-slate-200 bg-slate-950 px-2 py-0.5 rounded border border-slate-800">
+                        {caseData?.priority_score ? Number(caseData.priority_score).toFixed(0) : 0}/100
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Why This Case First Explanation */}
+                  <div className="p-3 bg-slate-950/80 rounded-xl border border-slate-800/80 text-xs text-slate-300 font-sans leading-relaxed">
+                    <strong className="text-emerald-400 block mb-1 font-mono uppercase text-[10px] tracking-wider">
+                      WHY THIS CASE FIRST?
+                    </strong>
+                    {caseData?.priority_reason ||
+                      'Prioritized based on high financial impact, strong recoverability likelihood, and time-critical window.'}
+                  </div>
+
+                  {/* 5-Factor Score Breakdown Progress Bars */}
+                  <div className="space-y-2 pt-1">
+                    <div className="flex items-center justify-between text-[11px] text-slate-400">
+                      <span>Financial Exposure</span>
+                      <span className="font-mono font-bold text-slate-200">
+                        {caseData?.priority_breakdown?.financial_impact_pct?.toFixed(0) || Math.min(100, Math.round((atRiskAmount / 50000) * 65))}%
+                      </span>
+                    </div>
+                    <div className="w-full bg-slate-950 rounded-full h-1.5 overflow-hidden border border-slate-800">
+                      <div
+                        className="bg-rose-500 h-full rounded-full transition-all duration-500"
+                        style={{ width: `${Math.min(100, caseData?.priority_breakdown?.financial_impact_pct || (atRiskAmount / 50000) * 65)}%` }}
+                      />
+                    </div>
+
+                    <div className="flex items-center justify-between text-[11px] text-slate-400">
+                      <span>Recovery Probability</span>
+                      <span className="font-mono font-bold text-emerald-400">
+                        {caseData?.priority_breakdown?.recovery_probability_pct?.toFixed(0) || Math.round(recoveryProb * 100)}%
+                      </span>
+                    </div>
+                    <div className="w-full bg-slate-950 rounded-full h-1.5 overflow-hidden border border-slate-800">
+                      <div
+                        className="bg-emerald-500 h-full rounded-full transition-all duration-500"
+                        style={{ width: `${caseData?.priority_breakdown?.recovery_probability_pct || recoveryProb * 100}%` }}
+                      />
+                    </div>
+
+                    <div className="flex items-center justify-between text-[11px] text-slate-400">
+                      <span>Time Urgency</span>
+                      <span className="font-mono font-bold text-amber-400">
+                        {caseData?.priority_breakdown?.urgency_score_pct?.toFixed(0) || ((caseData?.urgency_score || 0.6) * 100).toFixed(0)}%
+                      </span>
+                    </div>
+                    <div className="w-full bg-slate-950 rounded-full h-1.5 overflow-hidden border border-slate-800">
+                      <div
+                        className="bg-amber-500 h-full rounded-full transition-all duration-500"
+                        style={{ width: `${caseData?.priority_breakdown?.urgency_score_pct || (caseData?.urgency_score || 0.6) * 100}%` }}
+                      />
+                    </div>
+
+                    <div className="flex items-center justify-between text-[11px] text-slate-400">
+                      <span>Failure Severity ({caseData?.severity || 'MEDIUM'})</span>
+                      <span className="font-mono font-bold text-cyan-400">
+                        {caseData?.priority_breakdown?.severity_score_pct?.toFixed(0) || ((caseData?.severity_score || 0.6) * 100).toFixed(0)}%
+                      </span>
+                    </div>
+                    <div className="w-full bg-slate-950 rounded-full h-1.5 overflow-hidden border border-slate-800">
+                      <div
+                        className="bg-cyan-500 h-full rounded-full transition-all duration-500"
+                        style={{ width: `${caseData?.priority_breakdown?.severity_score_pct || (caseData?.severity_score || 0.6) * 100}%` }}
+                      />
+                    </div>
+
+                    <div className="flex items-center justify-between text-[11px] text-slate-400">
+                      <span>Historical Yield Multiplier</span>
+                      <span className="font-mono font-bold text-purple-400">
+                        {caseData?.priority_breakdown?.historical_multiplier_pct?.toFixed(0) || ((caseData?.historical_multiplier || 1.0) * 100).toFixed(0)}%
+                      </span>
+                    </div>
+                    <div className="w-full bg-slate-950 rounded-full h-1.5 overflow-hidden border border-slate-800">
+                      <div
+                        className="bg-purple-500 h-full rounded-full transition-all duration-500"
+                        style={{ width: `${Math.min(100, (caseData?.priority_breakdown?.historical_multiplier_pct || 100) * 0.9)}%` }}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* 2. Core Financial Revenue Triad */}
                 <div className="grid grid-cols-3 gap-3">
                   <div className="p-3.5 bg-slate-950/80 rounded-2xl border border-slate-800">
                     <span className="text-[10px] font-mono font-bold text-rose-400 uppercase tracking-wider block">
