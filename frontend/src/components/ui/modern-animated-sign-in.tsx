@@ -231,7 +231,7 @@ const OrbitingCircles = memo(function OrbitingCircles({
           className='pointer-events-none absolute inset-0 size-full'
         >
           <circle
-            className='stroke-blue-500/20 stroke-1'
+            className='stroke-blue-400/40 stroke-1'
             cx='50%'
             cy='50%'
             r={radius}
@@ -285,11 +285,13 @@ const TechOrbitDisplay = memo(function TechOrbitDisplay({
   return (
     <section className='relative flex h-full w-full flex-col items-center justify-center overflow-hidden rounded-2xl'>
       <div className="z-10 text-center space-y-2 pointer-events-none select-none px-4">
-        <span className='whitespace-pre-wrap bg-gradient-to-b from-white via-blue-100 to-blue-400 bg-clip-text text-center text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-transparent block drop-shadow-sm'>
+        <span className='whitespace-pre-wrap bg-gradient-to-r from-white via-blue-200 to-white bg-clip-text text-center text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-transparent block'
+          style={{ textShadow: '0 0 40px rgba(147,197,253,0.5), 0 0 80px rgba(59,130,246,0.3)' }}
+        >
           {text}
         </span>
         {subText && (
-          <span className="text-xs sm:text-sm font-mono text-blue-200/90 font-semibold tracking-wider uppercase block">
+          <span className="text-xs sm:text-sm font-mono text-blue-100/80 font-bold tracking-widest uppercase block mt-1">
             {subText}
           </span>
         )}

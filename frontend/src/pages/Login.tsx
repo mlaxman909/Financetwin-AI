@@ -35,8 +35,8 @@ export default function Login() {
   const orbitIcons: IconConfig[] = [
     {
       component: () => (
-        <div className="w-10 h-10 rounded-xl bg-[#0e1a38] border border-blue-500/50 flex items-center justify-center text-white shadow-lg shadow-blue-500/30 backdrop-blur-md">
-          <Zap className="w-5 h-5 text-blue-400" />
+        <div className="w-10 h-10 rounded-xl bg-white/10 border border-white/60 flex items-center justify-center text-white shadow-lg shadow-white/20 backdrop-blur-md">
+          <Zap className="w-5 h-5 text-white" />
         </div>
       ),
       className: 'size-[40px]',
@@ -48,8 +48,8 @@ export default function Login() {
     },
     {
       component: () => (
-        <div className="w-10 h-10 rounded-xl bg-[#0e1a38] border border-blue-400/50 flex items-center justify-center text-white shadow-lg shadow-blue-400/30 backdrop-blur-md">
-          <Bot className="w-5 h-5 text-blue-300" />
+        <div className="w-10 h-10 rounded-xl bg-blue-600/30 border border-blue-200/70 flex items-center justify-center text-white shadow-lg shadow-blue-200/25 backdrop-blur-md">
+          <Bot className="w-5 h-5 text-white" />
         </div>
       ),
       className: 'size-[40px]',
@@ -61,7 +61,7 @@ export default function Login() {
     },
     {
       component: () => (
-        <div className="w-12 h-12 rounded-2xl bg-[#102046] border border-blue-400/60 flex items-center justify-center text-white shadow-xl shadow-blue-500/25 backdrop-blur-md">
+        <div className="w-12 h-12 rounded-2xl bg-white/15 border-2 border-white/80 flex items-center justify-center text-white shadow-xl shadow-white/30 backdrop-blur-md">
           <ShieldCheck className="w-6 h-6 text-white" />
         </div>
       ),
@@ -74,8 +74,8 @@ export default function Login() {
     },
     {
       component: () => (
-        <div className="w-12 h-12 rounded-2xl bg-[#102046] border border-indigo-400/60 flex items-center justify-center text-white shadow-xl shadow-indigo-500/25 backdrop-blur-md">
-          <Cpu className="w-6 h-6 text-blue-300" />
+        <div className="w-12 h-12 rounded-2xl bg-indigo-500/25 border-2 border-indigo-200/70 flex items-center justify-center text-white shadow-xl shadow-indigo-200/25 backdrop-blur-md">
+          <Cpu className="w-6 h-6 text-white" />
         </div>
       ),
       className: 'size-[50px]',
@@ -87,7 +87,7 @@ export default function Login() {
     },
     {
       component: () => (
-        <div className="w-12 h-12 rounded-2xl bg-[#132654] border border-blue-400/60 flex items-center justify-center text-white shadow-xl shadow-blue-600/30 backdrop-blur-md">
+        <div className="w-12 h-12 rounded-2xl bg-blue-400/20 border-2 border-blue-100/80 flex items-center justify-center text-white shadow-xl shadow-blue-100/30 backdrop-blur-md">
           <Layers className="w-6 h-6 text-white" />
         </div>
       ),
@@ -100,8 +100,8 @@ export default function Login() {
     },
     {
       component: () => (
-        <div className="w-12 h-12 rounded-2xl bg-[#132654] border border-blue-300/60 flex items-center justify-center text-white shadow-xl shadow-blue-400/30 backdrop-blur-md">
-          <Sparkles className="w-6 h-6 text-blue-200" />
+        <div className="w-12 h-12 rounded-2xl bg-sky-400/20 border-2 border-sky-200/80 flex items-center justify-center text-white shadow-xl shadow-sky-200/30 backdrop-blur-md">
+          <Sparkles className="w-6 h-6 text-white" />
         </div>
       ),
       className: 'size-[55px]',
@@ -223,8 +223,17 @@ export default function Login() {
         </div>
       </header>
 
-      {/* Left Side: Modern Animated Orbit & Ripple Display in Dark Blue & White */}
-      <section className="hidden lg:flex w-1/2 min-h-screen relative flex-col items-center justify-center border-r border-blue-900/40 bg-gradient-to-br from-[#070c18] via-[#09132c] to-[#0e1d44] p-12">
+      {/* Left Side: Modern Animated Orbit & Ripple Display */}
+      <section className="hidden lg:flex w-1/2 min-h-screen relative flex-col items-center justify-center border-r border-blue-900/40 bg-gradient-to-br from-[#070c18] via-[#0a1535] to-[#0d1e4a] p-12 overflow-hidden">
+        {/* Decorative subtle grid overlay */}
+        <div className="absolute inset-0 pointer-events-none" style={{
+          backgroundImage: 'linear-gradient(rgba(99,179,237,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(99,179,237,0.04) 1px, transparent 1px)',
+          backgroundSize: '48px 48px',
+        }} />
+        {/* Strong corner glows for white+blue depth */}
+        <div className="absolute top-0 left-0 w-72 h-72 bg-blue-500/20 rounded-full blur-[100px] pointer-events-none" />
+        <div className="absolute bottom-0 right-0 w-72 h-72 bg-indigo-600/20 rounded-full blur-[100px] pointer-events-none" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-blue-400/8 rounded-full blur-[120px] pointer-events-none" />
         <Ripple mainCircleSize={120} numCircles={9} />
         <TechOrbitDisplay
           iconsArray={orbitIcons}
@@ -233,12 +242,12 @@ export default function Login() {
         />
 
         {/* Real-time Telemetry Status Card */}
-        <div className="absolute bottom-10 z-10 flex items-center gap-3 px-5 py-2.5 rounded-full bg-[#0b1633]/90 border border-blue-800/80 shadow-2xl backdrop-blur-md text-xs font-mono text-white">
+        <div className="absolute bottom-10 z-10 flex items-center gap-3 px-5 py-2.5 rounded-full bg-white/10 border border-white/20 shadow-2xl backdrop-blur-md text-xs font-mono text-white">
           <span className="flex h-2 w-2 relative">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-300"></span>
           </span>
-          <span className="text-blue-200/80">Deterministic Recovery Engine:</span>
+          <span className="text-blue-100/90">Deterministic Recovery Engine:</span>
           <span className="text-white font-bold">100% Policy Bounds Enforced</span>
         </div>
       </section>
