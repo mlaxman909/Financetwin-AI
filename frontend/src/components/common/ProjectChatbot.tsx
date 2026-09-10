@@ -289,6 +289,11 @@ export default function ProjectChatbot() {
     s.title.toLowerCase().includes(searchHistoryQuery.toLowerCase())
   );
 
+  // Hide Copilot/Chatbot on login and signup pages
+  if (location.pathname === '/login' || location.pathname === '/signup') {
+    return null;
+  }
+
   return (
     <>
       {/* Floating Copilot Launcher Button */}
