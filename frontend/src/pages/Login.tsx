@@ -3,18 +3,11 @@ import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   ShieldCheck,
-  CheckCircle2,
   ArrowRight,
   Lock,
   Mail,
-  User,
-  Building,
   Eye,
   EyeOff,
-  Sparkles,
-  Zap,
-  Shield,
-  Activity,
   KeyRound,
   Check
 } from 'lucide-react';
