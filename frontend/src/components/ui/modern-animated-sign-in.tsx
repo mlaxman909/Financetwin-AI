@@ -46,7 +46,7 @@ const Input = memo(
             background: useMotionTemplate`
           radial-gradient(
             ${visible ? radius + 'px' : '0px'} circle at ${mouseX}px ${mouseY}px,
-            #10b981,
+            #3b82f6,
             transparent 80%
           )
         `,
@@ -54,12 +54,12 @@ const Input = memo(
           onMouseMove={handleMouseMove}
           onMouseEnter={() => setVisible(true)}
           onMouseLeave={() => setVisible(false)}
-          className='group/input rounded-lg p-[2px] transition duration-300'
+          className='group/input rounded-xl p-[2px] transition duration-300'
         >
           <input
             type={type}
             className={cn(
-              `flex h-10 w-full rounded-md border border-slate-800 bg-slate-950 px-3 py-2 text-sm text-slate-100 transition duration-300 file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-slate-500 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-emerald-500 disabled:cursor-not-allowed disabled:opacity-50`,
+              `flex h-11 w-full rounded-xl border border-blue-900/60 bg-[#091124] px-4 py-2.5 text-sm text-white placeholder:text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 transition duration-300 disabled:cursor-not-allowed disabled:opacity-50`,
               className
             )}
             ref={ref}
@@ -147,7 +147,7 @@ const BoxReveal = memo(function BoxReveal({
           left: 0,
           right: 0,
           zIndex: 20,
-          background: boxColor ?? '#10b981',
+          background: boxColor ?? '#2563eb',
           borderRadius: 4,
         }}
       />
@@ -166,24 +166,24 @@ type RippleProps = {
 
 const Ripple = memo(function Ripple({
   mainCircleSize = 210,
-  mainCircleOpacity = 0.24,
+  mainCircleOpacity = 0.28,
   numCircles = 10,
   className = '',
 }: RippleProps) {
   return (
     <section
-      className={`absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_75%)] ${className}`}
+      className={`absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden [mask-image:radial-gradient(ellipse_at_center,white_40%,transparent_75%)] ${className}`}
     >
       {Array.from({ length: numCircles }, (_, i) => {
         const size = mainCircleSize + i * 65;
-        const opacity = Math.max(0.04, mainCircleOpacity - i * 0.025);
+        const opacity = Math.max(0.05, mainCircleOpacity - i * 0.025);
         const animationDelay = `${i * 0.08}s`;
         const borderStyle = i === numCircles - 1 ? 'dashed' : 'solid';
 
         return (
           <span
             key={i}
-            className='absolute animate-ripple rounded-full border border-emerald-500/20'
+            className='absolute animate-ripple rounded-full border border-blue-400/30'
             style={{
               width: `${size}px`,
               height: `${size}px`,
@@ -231,7 +231,7 @@ const OrbitingCircles = memo(function OrbitingCircles({
           className='pointer-events-none absolute inset-0 size-full'
         >
           <circle
-            className='stroke-emerald-500/15 stroke-1'
+            className='stroke-blue-500/20 stroke-1'
             cx='50%'
             cy='50%'
             r={radius}
@@ -280,16 +280,16 @@ type TechnologyOrbitDisplayProps = {
 const TechOrbitDisplay = memo(function TechOrbitDisplay({
   iconsArray,
   text = 'RevenueRescue AI',
-  subText = 'Autonomous Recovery Agent',
+  subText = 'Autonomous Recovery & RBAC Mission Control',
 }: TechnologyOrbitDisplayProps) {
   return (
     <section className='relative flex h-full w-full flex-col items-center justify-center overflow-hidden rounded-2xl'>
       <div className="z-10 text-center space-y-2 pointer-events-none select-none px-4">
-        <span className='whitespace-pre-wrap bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 bg-clip-text text-center text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-transparent block'>
+        <span className='whitespace-pre-wrap bg-gradient-to-b from-white via-blue-100 to-blue-400 bg-clip-text text-center text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-transparent block drop-shadow-sm'>
           {text}
         </span>
         {subText && (
-          <span className="text-xs sm:text-sm font-mono text-slate-400 font-semibold tracking-wider uppercase block">
+          <span className="text-xs sm:text-sm font-mono text-blue-200/90 font-semibold tracking-wider uppercase block">
             {subText}
           </span>
         )}
@@ -317,8 +317,8 @@ const TechOrbitDisplay = memo(function TechOrbitDisplay({
 const BottomGradient = () => {
   return (
     <>
-      <span className='group-hover/btn:opacity-100 block transition duration-500 opacity-0 absolute h-[2px] w-full -bottom-px inset-x-0 bg-gradient-to-r from-transparent via-emerald-400 to-transparent' />
-      <span className='group-hover/btn:opacity-100 blur-sm block transition duration-500 opacity-0 absolute h-[2px] w-1/2 mx-auto -bottom-px inset-x-10 bg-gradient-to-r from-transparent via-teal-400 to-transparent' />
+      <span className='group-hover/btn:opacity-100 block transition duration-500 opacity-0 absolute h-[2px] w-full -bottom-px inset-x-0 bg-gradient-to-r from-transparent via-blue-400 to-transparent' />
+      <span className='group-hover/btn:opacity-100 blur-sm block transition duration-500 opacity-0 absolute h-[2px] w-1/2 mx-auto -bottom-px inset-x-10 bg-gradient-to-r from-transparent via-indigo-400 to-transparent' />
     </>
   );
 };
@@ -333,7 +333,7 @@ const Label = memo(function Label({ className, ...props }: LabelProps) {
   return (
     <label
       className={cn(
-        'text-xs font-semibold text-slate-300 leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70',
+        'text-xs font-semibold text-slate-200 leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70',
         className
       )}
       {...props}
@@ -428,14 +428,14 @@ const AnimatedForm = memo(function AnimatedForm({
   return (
     <section className='w-full max-w-md flex flex-col gap-4 mx-auto'>
       <BoxReveal boxColor='var(--skeleton)' duration={0.3}>
-        <h2 className='font-black text-2xl sm:text-3xl text-slate-100 tracking-tight'>
+        <h2 className='font-black text-2xl sm:text-3xl text-white tracking-tight'>
           {header}
         </h2>
       </BoxReveal>
 
       {subHeader && (
         <BoxReveal boxColor='var(--skeleton)' duration={0.3} className='pb-1'>
-          <p className='text-slate-400 text-xs sm:text-sm max-w-sm'>
+          <p className='text-blue-200/80 text-xs sm:text-sm max-w-sm'>
             {subHeader}
           </p>
         </BoxReveal>
@@ -452,7 +452,7 @@ const AnimatedForm = memo(function AnimatedForm({
             width='100%'
           >
             <button
-              className='g-button relative group/btn bg-slate-950 hover:bg-slate-900 w-full rounded-xl border border-slate-800 h-10 font-medium text-xs text-slate-200 outline-none hover:cursor-pointer transition-all'
+              className='g-button relative group/btn bg-[#0c1630] hover:bg-[#112044] w-full rounded-xl border border-blue-900/60 h-11 font-semibold text-xs text-white outline-none hover:cursor-pointer transition-all shadow-sm'
               type='button'
               onClick={onGoogleLogin}
             >
@@ -471,17 +471,17 @@ const AnimatedForm = memo(function AnimatedForm({
 
           <BoxReveal boxColor='var(--skeleton)' duration={0.3} width='100%'>
             <section className='flex items-center gap-3 py-1'>
-              <hr className='flex-1 border-t border-slate-800' />
-              <p className='text-slate-500 text-[11px] font-mono'>
-                or enter work credentials
+              <hr className='flex-1 border-t border-blue-900/60' />
+              <p className='text-blue-300/60 text-[11px] font-mono'>
+                or enter corporate credentials
               </p>
-              <hr className='flex-1 border-t border-slate-800' />
+              <hr className='flex-1 border-t border-blue-900/60' />
             </section>
           </BoxReveal>
         </>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-3">
+      <form onSubmit={handleSubmit} className="space-y-3.5">
         <section
           className={`grid grid-cols-1 md:grid-cols-${fieldPerRow} gap-3`}
         >
@@ -489,7 +489,7 @@ const AnimatedForm = memo(function AnimatedForm({
             <section key={field.label} className='flex flex-col gap-1.5'>
               <BoxReveal boxColor='var(--skeleton)' duration={0.3}>
                 <Label htmlFor={field.label}>
-                  {field.label} {field.required && <span className='text-emerald-400'>*</span>}
+                  {field.label} {field.required && <span className='text-blue-400'>*</span>}
                 </Label>
               </BoxReveal>
 
@@ -519,7 +519,7 @@ const AnimatedForm = memo(function AnimatedForm({
                     <button
                       type='button'
                       onClick={toggleVisibility}
-                      className='absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-200 cursor-pointer'
+                      className='absolute inset-y-0 right-0 pr-3.5 flex items-center text-blue-300/60 hover:text-white cursor-pointer'
                     >
                       {visible ? (
                         <Eye className='h-4 w-4' />
@@ -531,7 +531,7 @@ const AnimatedForm = memo(function AnimatedForm({
                 </section>
 
                 {errors[field.label] && (
-                  <p className='text-rose-400 text-xs mt-1'>
+                  <p className='text-rose-400 text-xs mt-1 font-mono'>
                     {errors[field.label]}
                   </p>
                 )}
@@ -542,7 +542,7 @@ const AnimatedForm = memo(function AnimatedForm({
 
         {errorField && (
           <BoxReveal width='100%' boxColor='var(--skeleton)' duration={0.3}>
-            <div className='p-2.5 rounded-xl bg-rose-950/80 border border-rose-800 text-rose-300 text-xs font-mono'>
+            <div className='p-3 rounded-xl bg-rose-950/80 border border-rose-800 text-rose-300 text-xs font-mono'>
               {errorField}
             </div>
           </BoxReveal>
@@ -555,14 +555,14 @@ const AnimatedForm = memo(function AnimatedForm({
           overflow='visible'
         >
           <button
-            className='bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 relative group/btn block w-full text-white rounded-xl h-11 font-bold text-xs shadow-lg shadow-emerald-600/25 outline-none hover:cursor-pointer transition-all active:scale-[0.98] disabled:opacity-50'
+            className='bg-gradient-to-r from-blue-600 via-blue-500 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 relative group/btn block w-full text-white rounded-xl h-11 font-bold text-xs shadow-lg shadow-blue-600/30 outline-none hover:cursor-pointer transition-all active:scale-[0.98] disabled:opacity-50'
             type='submit'
             disabled={isLoading}
           >
             {isLoading ? (
               <span className="flex items-center justify-center gap-2">
                 <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                <span>Authenticating...</span>
+                <span>Authenticating Access...</span>
               </span>
             ) : (
               <span className="flex items-center justify-center gap-2">
@@ -579,7 +579,7 @@ const AnimatedForm = memo(function AnimatedForm({
             <section className='text-center pt-1'>
               <button
                 type='button'
-                className='text-xs text-emerald-400 hover:text-emerald-300 font-medium hover:cursor-pointer outline-none transition-colors'
+                className='text-xs text-blue-400 hover:text-blue-300 font-medium hover:cursor-pointer outline-none transition-colors'
                 onClick={goTo}
               >
                 {textVariantButton}

@@ -12,9 +12,10 @@ export default function PageContainer({ title, children, onRefresh }: PageContai
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <div className="flex h-screen w-screen overflow-hidden bg-slate-950 text-slate-100 relative font-sans">
-      {/* Background Subtle Gradient Overlay */}
-      <div className="fixed top-0 left-0 lg:left-72 right-0 h-80 bg-gradient-to-b from-slate-900/60 via-slate-950/20 to-transparent pointer-events-none z-0" />
+    <div className="flex h-screen w-screen overflow-hidden bg-[#070c18] text-white relative font-sans">
+      {/* Background Subtle Dark Blue Gradient Glows */}
+      <div className="fixed top-0 left-0 lg:left-72 right-0 h-96 bg-gradient-to-b from-blue-900/15 via-[#0b1633]/20 to-transparent pointer-events-none z-0" />
+      <div className="fixed -top-40 right-10 w-[500px] h-[500px] bg-blue-600/10 rounded-full blur-[160px] pointer-events-none z-0" />
 
       <Sidebar isOpen={mobileMenuOpen} onClose={() => setMobileMenuOpen(false)} />
 
@@ -33,4 +34,3 @@ export default function PageContainer({ title, children, onRefresh }: PageContai
     </div>
   );
 }
-

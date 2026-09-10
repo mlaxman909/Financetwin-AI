@@ -51,23 +51,23 @@ export default function Header({ title, onRefresh, onOpenMobileMenu }: HeaderPro
   const getRoleBadgeColor = (role: UserRole) => {
     switch (role) {
       case 'RECOVERY_ADMIN':
-        return 'bg-emerald-950/80 text-emerald-300 border-emerald-800';
+        return 'bg-blue-900/80 text-white border-blue-600';
       case 'RECOVERY_MANAGER':
-        return 'bg-amber-950/80 text-amber-300 border-amber-800';
+        return 'bg-indigo-950/80 text-blue-200 border-indigo-700';
       case 'RECOVERY_OPERATOR':
       default:
-        return 'bg-blue-950/80 text-blue-300 border-blue-800';
+        return 'bg-sky-950/80 text-sky-200 border-sky-800';
     }
   };
 
 
   return (
-    <header className="h-16 bg-slate-900/95 backdrop-blur-md border-b border-slate-800 flex items-center justify-between px-4 sm:px-6 z-20 shrink-0 relative">
+    <header className="h-16 bg-[#091228]/95 backdrop-blur-md border-b border-blue-900/40 flex items-center justify-between px-4 sm:px-6 z-20 shrink-0 relative">
       <div className="flex items-center gap-3">
         {onOpenMobileMenu && (
           <button
             onClick={onOpenMobileMenu}
-            className="lg:hidden p-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-colors"
+            className="lg:hidden p-2 rounded-lg text-blue-300 hover:text-white hover:bg-blue-950 transition-colors"
             aria-label="Open navigation menu"
           >
             <Menu className="w-5 h-5" />
