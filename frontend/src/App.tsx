@@ -20,6 +20,7 @@ import RecoveryCommandCenter from './pages/RecoveryCommandCenter';
 import BatchRecovery from './pages/BatchRecovery';
 import RecoveryCases from './pages/RecoveryCases';
 import RecoveryCaseDetail from './pages/RecoveryCaseDetail';
+import RecoveryPriorityQueue from './pages/RecoveryPriorityQueue';
 import OperatorQueue from './pages/OperatorQueue';
 import RevenueLeakage from './pages/RevenueLeakage';
 import RecoveryIntelligence from './pages/RecoveryIntelligence';

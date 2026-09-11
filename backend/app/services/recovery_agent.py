@@ -534,9 +534,14 @@ def run_batch_recovery(
 
     # Step 1: Create all cases in DB
     for case_data in case_dicts:
+        cid = case_data.get("case_id", f"REC-{uuid.uuid4().hex[:8].upper()}")
+        existing = db.query(RecoveryCase).filter(RecoveryCase.case_id == cid).first()
+        if existing:
+            cid = f"{cid}-{uuid.uuid4().hex[:4].upper()}"
+
         case = RecoveryCase(
-            case_id=case_data["case_id"],
-            recovery_type=case_data["recovery_type"],
+            case_id=cid,
+            recovery_type=case_data.get("recovery_type", RecoveryType.PAYMENT_FAILURE),
             severity=case_data.get("severity", Severity.MEDIUM),
             amount_at_risk=Decimal(str(case_data["amount_at_risk"])),
             customer_id=case_data.get("customer_id"),
@@ -547,6 +552,14 @@ def run_batch_recovery(
             diagnosis_evidence={"evidence": case_data.get("diagnosis_evidence", [])},
             recovery_probability=Decimal(str(case_data.get("recovery_probability", 0.50))),
             priority_score=Decimal(str(case_data.get("priority_score", 50.0))),
+            priority_level=case_data.get("priority_level", "P2"),
+            financial_impact_score=Decimal(str(case_data.get("financial_impact_score", 0.50))) if case_data.get("financial_impact_score") is not None else None,
+            urgency_score=Decimal(str(case_data.get("urgency_score", 0.50))) if case_data.get("urgency_score") is not None else None,
+            severity_score=Decimal(str(case_data.get("severity_score", 0.60))) if case_data.get("severity_score") is not None else None,
+            historical_multiplier=Decimal(str(case_data.get("historical_multiplier", 1.00))) if case_data.get("historical_multiplier") is not None else None,
+            priority_reason=case_data.get("priority_reason"),
+            priority_breakdown=case_data.get("priority_breakdown"),
+            priority_calculated_at=case_data.get("priority_calculated_at", datetime.utcnow()),
             recommended_action=None,
             current_status=RecoveryCaseStatus.DETECTED,
             attempt_count=case_data.get("attempt_count", 0),
@@ -690,11 +703,23 @@ def detect_recovery_cases_from_exceptions(
 
         recovery_type = EXCEPTION_TO_RECOVERY_TYPE.get(exc.exception_type, RecoveryType.PAYMENT_FAILURE)
         root_cause = EXCEPTION_TO_ROOT_CAUSE.get(exc.exception_type, RootCause.UNKNOWN_REQUIRES_REVIEW)
-        amount = float(exc.expected_amount)
+        amount = exc.expected_amount
         sev = exc.severity
 
-        prob = {"LOW": 0.65, "MEDIUM": 0.50, "HIGH": 0.35, "CRITICAL": 0.20}.get(sev, 0.50)
-        priority = min(100.0, round(amount / 2000 * 0.5 + prob * 30 + {"LOW": 5, "MEDIUM": 10, "HIGH": 20, "CRITICAL": 30}.get(sev, 10), 1))
+        prob_val = {"LOW": 0.65, "MEDIUM": 0.50, "HIGH": 0.35, "CRITICAL": 0.20}.get(sev, 0.50)
+        prob = Decimal(str(prob_val))
+
+        p_info = PriorityScoringService.compute_priority(
+            amount_at_risk=amount,
+            recovery_probability=prob,
+            severity=sev,
+            root_cause=root_cause,
+            days_overdue=1,
+            created_at=datetime.utcnow(),
+            attempt_count=0,
+            has_dispute=False,
+            recovery_type=recovery_type
+        )
 
         new_case_id = f"REC-EXC-{exc.exception_id}"
         case = RecoveryCase(
@@ -709,8 +734,16 @@ def detect_recovery_cases_from_exceptions(
             root_cause=root_cause,
             diagnosis_confidence=Decimal("0.70"),
             diagnosis_evidence={"evidence": [f"Exception type: {exc.exception_type}", f"Variance: ₹{float(exc.variance):,.0f}"]},
-            recovery_probability=Decimal(str(prob)),
-            priority_score=Decimal(str(priority)),
+            recovery_probability=prob,
+            priority_score=Decimal(str(p_info["priority_score"])),
+            priority_level=p_info["priority_level"],
+            financial_impact_score=Decimal(str(p_info["financial_impact_score"])),
+            urgency_score=Decimal(str(p_info["urgency_score"])),
+            severity_score=Decimal(str(p_info["severity_score"])),
+            historical_multiplier=Decimal(str(p_info["historical_multiplier"])),
+            priority_reason=p_info["priority_reason"],
+            priority_breakdown=p_info["score_breakdown"],
+            priority_calculated_at=p_info["priority_calculated_at"],
             current_status=RecoveryCaseStatus.DETECTED,
             anomaly_score=exc.anomaly_score,
         )
@@ -722,12 +755,74 @@ def detect_recovery_cases_from_exceptions(
             db=db, entity_type="RecoveryCase", entity_id=new_case_id,
             action="RISK_DETECTED_FROM_EXCEPTION", actor=actor,
             decision="CASE_CREATED",
-            reason=f"Revenue at risk ₹{amount:,.0f} from exception {exc.exception_id}",
-            metadata_json={"exception_type": exc.exception_type, "recovery_type": recovery_type}
+            reason=f"Revenue at risk ₹{float(amount):,.0f} from exception {exc.exception_id} — Priority {p_info['priority_level']} ({p_info['priority_score']})",
+            metadata_json={"exception_type": exc.exception_type, "recovery_type": recovery_type, "priority_score": p_info["priority_score"]}
         )
 
     db.commit()
     return created_case_ids
+
+
+def recalculate_case_priority(
+    case: RecoveryCase,
+    db: Session,
+    policy: Optional[dict] = None,
+    actor: str = "priority_engine"
+) -> Dict[str, Any]:
+    """
+    Recalculates a single case's priority score and classification using active policy.
+    Logs audit trail event if score or classification changes.
+    """
+    old_score = float(case.priority_score or 0.0)
+    old_level = case.priority_level or "P2"
+
+    p_info = PriorityScoringService.compute_priority(
+        amount_at_risk=case.amount_at_risk,
+        recovery_probability=case.recovery_probability,
+        severity=case.severity,
+        root_cause=case.root_cause,
+        days_overdue=case.days_overdue,
+        created_at=case.created_at,
+        attempt_count=case.attempt_count,
+        has_dispute=case.has_dispute,
+        recovery_type=case.recovery_type,
+        policy=policy
+    )
+
+    case.priority_score = Decimal(str(p_info["priority_score"]))
+    case.priority_level = p_info["priority_level"]
+    case.financial_impact_score = Decimal(str(p_info["financial_impact_score"]))
+    case.urgency_score = Decimal(str(p_info["urgency_score"]))
+    case.severity_score = Decimal(str(p_info["severity_score"]))
+    case.historical_multiplier = Decimal(str(p_info["historical_multiplier"]))
+    case.priority_reason = p_info["priority_reason"]
+    case.priority_breakdown = p_info["score_breakdown"]
+    case.priority_calculated_at = p_info["priority_calculated_at"]
+    case.updated_at = datetime.utcnow()
+
+    new_score = p_info["priority_score"]
+    new_level = p_info["priority_level"]
+
+    if abs(new_score - old_score) >= 0.1 or new_level != old_level:
+        log_action(
+            db=db,
+            entity_type="RecoveryCase",
+            entity_id=case.case_id,
+            action="PRIORITY_RECALCULATED",
+            actor=actor,
+            decision=f"{old_level} ({old_score:.1f}) → {new_level} ({new_score:.1f})",
+            reason=f"Priority recalculated: {p_info['priority_reason']}",
+            metadata_json={
+                "old_score": old_score,
+                "new_score": new_score,
+                "old_level": old_level,
+                "new_level": new_level,
+                "score_breakdown": p_info["score_breakdown"]
+            }
+        )
+
+    db.flush()
+    return p_info
 
 
 def compare_case_actions(case: RecoveryCase, policy: Optional[dict] = None) -> List[Dict[str, Any]]:

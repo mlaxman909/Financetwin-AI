@@ -10,6 +10,13 @@ import {
   CheckCircle2
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import {
+  Ripple,
+  TechOrbitDisplay,
+  AnimatedForm,
+  BoxReveal,
+  IconConfig,
+} from '../components/ui/modern-animated-sign-in';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -24,7 +31,95 @@ export default function Login() {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  // Orbiting Icons for Left Side Display with Dark Blue & White Theme
+  const orbitIcons: IconConfig[] = [
+    {
+      component: () => (
+        <div className="w-10 h-10 rounded-xl bg-white/10 border border-white/60 flex items-center justify-center text-white shadow-lg shadow-white/20 backdrop-blur-md">
+          <Zap className="w-5 h-5 text-white" />
+        </div>
+      ),
+      className: 'size-[40px]',
+      duration: 18,
+      delay: 0,
+      radius: 95,
+      path: true,
+      reverse: false,
+    },
+    {
+      component: () => (
+        <div className="w-10 h-10 rounded-xl bg-blue-600/30 border border-blue-200/70 flex items-center justify-center text-white shadow-lg shadow-blue-200/25 backdrop-blur-md">
+          <Bot className="w-5 h-5 text-white" />
+        </div>
+      ),
+      className: 'size-[40px]',
+      duration: 18,
+      delay: 9,
+      radius: 95,
+      path: false,
+      reverse: false,
+    },
+    {
+      component: () => (
+        <div className="w-12 h-12 rounded-2xl bg-white/15 border-2 border-white/80 flex items-center justify-center text-white shadow-xl shadow-white/30 backdrop-blur-md">
+          <ShieldCheck className="w-6 h-6 text-white" />
+        </div>
+      ),
+      className: 'size-[50px]',
+      duration: 26,
+      delay: 0,
+      radius: 160,
+      path: true,
+      reverse: true,
+    },
+    {
+      component: () => (
+        <div className="w-12 h-12 rounded-2xl bg-indigo-500/25 border-2 border-indigo-200/70 flex items-center justify-center text-white shadow-xl shadow-indigo-200/25 backdrop-blur-md">
+          <Cpu className="w-6 h-6 text-white" />
+        </div>
+      ),
+      className: 'size-[50px]',
+      duration: 26,
+      delay: 13,
+      radius: 160,
+      path: false,
+      reverse: true,
+    },
+    {
+      component: () => (
+        <div className="w-12 h-12 rounded-2xl bg-blue-400/20 border-2 border-blue-100/80 flex items-center justify-center text-white shadow-xl shadow-blue-100/30 backdrop-blur-md">
+          <Layers className="w-6 h-6 text-white" />
+        </div>
+      ),
+      className: 'size-[55px]',
+      duration: 34,
+      delay: 0,
+      radius: 230,
+      path: true,
+      reverse: false,
+    },
+    {
+      component: () => (
+        <div className="w-12 h-12 rounded-2xl bg-sky-400/20 border-2 border-sky-200/80 flex items-center justify-center text-white shadow-xl shadow-sky-200/30 backdrop-blur-md">
+          <Sparkles className="w-6 h-6 text-white" />
+        </div>
+      ),
+      className: 'size-[55px]',
+      duration: 34,
+      delay: 17,
+      radius: 230,
+      path: false,
+      reverse: false,
+    },
+  ];
+
+  const handleRoleSelect = (roleKey: 'operator' | 'manager' | 'admin', roleEmail: string) => {
+    setSelectedRole(roleKey);
+    setEmail(roleEmail);
+    setError(null);
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null);
 
@@ -49,7 +144,7 @@ export default function Login() {
     }
   };
 
-  const handleDemoSelect = async (userEmail: string, rolePath: string) => {
+  const handleGoogleLogin = async () => {
     setIsLoading(true);
     setError(null);
     switchUser(userEmail);
@@ -113,14 +208,28 @@ export default function Login() {
             </div>
           </div>
 
-          <div className="p-3.5 bg-slate-950/60 rounded-xl border border-slate-800 flex items-center justify-between text-xs font-mono">
-            <div className="flex items-center gap-2 text-emerald-400">
-              <ShieldCheck className="w-4 h-4" />
-              <span>Policy Guardrails Enforced</span>
-            </div>
-            <span className="text-[10px] text-slate-500">v2.0</span>
+      {/* Top Header Minimalist */}
+      <header className="absolute top-0 left-0 right-0 z-20 px-6 py-4 flex items-center justify-between border-b border-blue-900/40 backdrop-blur-md bg-[#070c18]/70">
+        <Link to="/" className="flex items-center gap-2.5 group">
+          <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center font-black text-white text-xs shadow-md shadow-blue-500/30 group-hover:scale-105 transition-transform">
+            RR
           </div>
+          <span className="font-extrabold text-sm tracking-tight text-white">
+            RevenueRescue <span className="text-blue-400">AI</span>
+          </span>
+        </Link>
+        <div className="flex items-center gap-4 text-xs">
+          <Link to="/recovery" className="text-blue-200/70 hover:text-white transition-colors hidden sm:block">
+            Command Center
+          </Link>
+          <Link to="/live-recovery" className="text-blue-200/70 hover:text-white transition-colors hidden sm:block">
+            Live Stream
+          </Link>
+          <Link to="/signup" className="px-4 py-1.5 rounded-full bg-blue-600 hover:bg-blue-500 text-white font-bold transition-all shadow-md shadow-blue-600/25">
+            Create Account
+          </Link>
         </div>
+      </header>
 
         {/* Right Side: Login Form */}
         <div className="lg:col-span-7 p-6 sm:p-8 lg:p-10 space-y-6 flex flex-col justify-between">
@@ -219,7 +328,7 @@ export default function Login() {
                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
                 </div>
-              </div>
+              </BoxReveal>
 
               <button
                 id="login-submit"

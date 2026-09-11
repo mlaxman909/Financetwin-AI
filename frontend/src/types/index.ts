@@ -302,6 +302,20 @@ export interface RecoveryAction {
   created_at: string;
 }
 
+export interface ScoreBreakdown {
+  financial_impact_pct: number;
+  recovery_probability_pct: number;
+  urgency_score_pct: number;
+  severity_score_pct: number;
+  historical_multiplier_pct: number;
+  weights?: {
+    financial: number;
+    probability: number;
+    urgency: number;
+    severity: number;
+  };
+}
+
 export interface RecoveryCase {
   id: number;
   case_id: string;
@@ -311,6 +325,7 @@ export interface RecoveryCase {
   customer_name?: string | null;
   customer_email?: string | null;
   customer_phone?: string | null;
+  merchant_id?: string | null;
   recovery_type: RecoveryType | string;
   severity: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
   amount_at_risk: number;
@@ -324,22 +339,36 @@ export interface RecoveryCase {
     [key: string]: any;
   };
   recovery_probability: number;
+  
+  // AI Priority Engine Fields
+  priority_score: number;
+  priority_level?: 'P0' | 'P1' | 'P2' | 'P3' | string;
+  financial_impact_score?: number | null;
+  urgency_score?: number | null;
+  severity_score?: number | null;
+  historical_multiplier?: number | null;
+  priority_reason?: string | null;
+  priority_breakdown?: ScoreBreakdown | null;
+  priority_calculated_at?: string | null;
+
   recommended_action?: string | null;
   action_reason?: string | null;
-  priority_score: number;
   current_status: RecoveryCaseStatus | string;
-  retry_count: number;
-  max_retries_allowed: number;
-  reminder_count: number;
-  max_reminders_allowed: number;
+  attempt_count?: number;
+  retry_count?: number;
+  max_retries_allowed?: number;
+  reminder_count?: number;
+  max_reminders_allowed?: number;
+  days_overdue?: number | null;
   workflow_started_at?: string | null;
   workflow_expires_at?: string | null;
   last_action_at?: string | null;
   next_retry_at?: string | null;
-  is_high_value: boolean;
-  is_disputed: boolean;
+  is_high_value?: boolean;
+  has_dispute?: boolean;
+  is_disputed?: boolean;
   promise_to_pay_date?: string | null;
-  promise_to_pay_misses: number;
+  promise_to_pay_misses?: number;
   assigned_to?: string | null;
   escalation_reason?: string | null;
   anomaly_score?: number | null;
@@ -347,6 +376,67 @@ export interface RecoveryCase {
   created_at: string;
   updated_at?: string | null;
   actions?: RecoveryAction[];
+}
+
+export interface PriorityQueueSummary {
+  p0_count: number;
+  p1_count: number;
+  p2_count: number;
+  p3_count: number;
+  total_cases: number;
+  total_revenue_at_risk: number;
+  high_priority_revenue: number;
+  estimated_recoverable_revenue: number;
+  average_recovery_probability: number;
+  cases_requiring_action: number;
+}
+
+export interface PriorityQueueResponse {
+  items: RecoveryCase[];
+  total: number;
+  page: number;
+  page_size: number;
+  summary: PriorityQueueSummary;
+}
+
+export interface PrioritySummaryResponse {
+  total_cases: number;
+  p0_cases: number;
+  p1_cases: number;
+  p2_cases: number;
+  p3_cases: number;
+  total_revenue_at_risk: number;
+  high_priority_revenue_at_risk: number;
+  estimated_recoverable_revenue: number;
+  recovered_revenue: number;
+  recovery_rate_pct: number;
+  average_recovery_probability: number;
+  cases_requiring_manual_action: number;
+  highest_priority_case?: RecoveryCase | null;
+  recommended_next_action?: string | null;
+  funnel: {
+    revenue_detected: number;
+    revenue_at_risk: number;
+    recoverable_revenue: number;
+    high_priority_revenue: number;
+    recovery_in_progress: number;
+    recovered_revenue: number;
+  };
+  priority_distribution: {
+    P0: number;
+    P1: number;
+    P2: number;
+    P3: number;
+  };
+}
+
+export interface RecoverNextResponse {
+  eligible: boolean;
+  case?: RecoveryCase | null;
+  why_first_reason?: string | null;
+  score_breakdown?: ScoreBreakdown | null;
+  recommended_action?: string | null;
+  message?: string | null;
 }
 
 export interface RecoveryMetrics {

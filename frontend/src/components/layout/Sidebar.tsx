@@ -19,7 +19,8 @@ import {
   CheckCircle2,
   ChevronDown,
   RefreshCw,
-  PlayCircle
+  PlayCircle,
+  Sparkles
 } from 'lucide-react';
 import { useAuth, DEMO_PERSONAS } from '../../context/AuthContext';
 import { UserRole } from '../../types';
@@ -51,6 +52,7 @@ export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
     {
       group: 'RECOVERY',
       items: [
+        { name: 'AI Priority Queue', path: '/recovery/priority', icon: Sparkles },
         { name: 'Live 10-Step Recovery', path: '/live-recovery', icon: PlayCircle },
         { name: 'Recovery Cases', path: '/recovery/cases', icon: FolderKanban },
         { name: 'Autonomous Recovery', path: '/recovery/batch', icon: RotateCw }
@@ -105,19 +107,19 @@ export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
       )}
 
       <aside
-        className={`fixed lg:static top-0 left-0 bottom-0 z-50 w-72 bg-slate-900 border-r border-slate-800 flex flex-col h-full shrink-0 transition-transform duration-300 ${
+        className={`fixed lg:static top-0 left-0 bottom-0 z-50 w-72 bg-[#081024] border-r border-blue-900/40 flex flex-col h-full shrink-0 transition-transform duration-300 ${
           isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         }`}
       >
         {/* Header Branding */}
-        <div className="p-5 border-b border-slate-800 flex items-center justify-between">
-          <div className="flex items-center gap-3.5 cursor-pointer" onClick={() => navigate('/recovery')}>
-            <div className="w-9 h-9 rounded-xl bg-emerald-600 flex items-center justify-center font-black text-white text-sm tracking-wider shadow-md shadow-emerald-500/20">
+        <div className="p-5 border-b border-blue-900/40 flex items-center justify-between">
+          <div className="flex items-center gap-3.5 cursor-pointer group" onClick={() => navigate('/recovery')}>
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center font-black text-white text-sm tracking-wider shadow-md shadow-blue-500/30 group-hover:scale-105 transition-transform">
               RR
             </div>
             <div>
-              <h1 className="font-bold text-base text-slate-100 leading-none tracking-tight">RevenueRescue AI</h1>
-              <span className="text-xs text-emerald-400 font-mono uppercase tracking-wider block mt-1 font-semibold">
+              <h1 className="font-extrabold text-base text-white leading-none tracking-tight">RevenueRescue AI</h1>
+              <span className="text-xs text-blue-300 font-mono uppercase tracking-wider block mt-1 font-bold">
                 Autonomous Recovery
               </span>
             </div>
@@ -125,7 +127,7 @@ export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
           {onClose && (
             <button
               onClick={onClose}
-              className="lg:hidden p-1.5 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-colors"
+              className="lg:hidden p-1.5 rounded-lg text-blue-300 hover:text-white hover:bg-blue-950 transition-colors"
               aria-label="Close sidebar"
             >
               <X className="w-5 h-5" />
@@ -137,7 +139,7 @@ export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
         <nav className="flex-1 px-3.5 py-4 space-y-4 overflow-y-auto">
           {navigationSections.map((sec) => (
             <div key={sec.group} className="space-y-1">
-              <div className="px-3 text-[10px] font-mono font-bold text-slate-500 uppercase tracking-wider">
+              <div className="px-3 text-[10px] font-mono font-bold text-blue-300/60 uppercase tracking-wider">
                 {sec.group}
               </div>
               <div className="space-y-0.5">
@@ -147,10 +149,10 @@ export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
                     to={item.path}
                     onClick={onClose}
                     className={({ isActive }) =>
-                      `flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-semibold transition-all duration-150 ${
+                      `flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all duration-150 ${
                         isActive
-                          ? 'bg-slate-800/90 text-emerald-400 border-l-2 border-emerald-500 pl-2.5 shadow-sm font-bold'
-                          : 'text-slate-400 hover:bg-slate-800/50 hover:text-slate-100'
+                          ? 'bg-blue-600 text-white shadow-md shadow-blue-600/30 font-bold'
+                          : 'text-slate-300 hover:bg-blue-950/50 hover:text-white'
                       }`
                     }
                   >

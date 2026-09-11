@@ -1,5 +1,15 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
+
+:root {
+  --background: #070c18;
+  --foreground: #ffffff;
+  --skeleton: #132247;
+  --border: #1e3a8a;
+  --btn-border: #2563eb;
+  --input: #0b1329;
+  --radius: 0.5rem;
+}
 
 html {
   font-size: 17px;
@@ -7,42 +17,42 @@ html {
 }
 
 @theme {
-  --color-brand-50: #f0f5ff;
-  --color-brand-100: #e0eafe;
-  --color-brand-500: #2563eb;
-  --color-brand-600: #1d4ed8;
-  --color-brand-700: #1e3a5f;
-  --color-navy-950: #0b0f19;
-  --color-navy-900: #0f172a;
-  --color-navy-850: #131c31;
-  --color-navy-800: #1e293b;
-  --color-navy-700: #274c77;
-  --color-navy-600: #334155;
-  --color-navy-500: #475569;
+  --color-brand-50: #eff6ff;
+  --color-brand-100: #dbeafe;
+  --color-brand-500: #3b82f6;
+  --color-brand-600: #2563eb;
+  --color-brand-700: #1d4ed8;
+  --color-navy-950: #070c18;
+  --color-navy-900: #0b1329;
+  --color-navy-850: #0e1a38;
+  --color-navy-800: #132247;
+  --color-navy-700: #1d3557;
+  --color-navy-600: #2563eb;
+  --color-navy-500: #3b82f6;
 }
 
 @utility enterprise-card {
-  background-color: #131c31;
+  background-color: #0d1836;
   border-width: 1px;
-  border-color: rgba(51, 65, 85, 0.6);
-  border-radius: 0.625rem;
-  box-shadow: 0 4px 12px -2px rgba(11, 15, 25, 0.5);
+  border-color: rgba(37, 99, 235, 0.25);
+  border-radius: 0.75rem;
+  box-shadow: 0 8px 24px -4px rgba(7, 12, 24, 0.7);
 }
 
 @utility enterprise-card-prominent {
-  background-color: #16223b;
+  background-color: #102046;
   border-width: 1px;
-  border-color: rgba(59, 130, 246, 0.4);
-  border-radius: 0.625rem;
-  box-shadow: 0 4px 16px -2px rgba(37, 99, 235, 0.15);
+  border-color: rgba(59, 130, 246, 0.6);
+  border-radius: 0.75rem;
+  box-shadow: 0 8px 30px -4px rgba(37, 99, 235, 0.25);
 }
 
 @utility enterprise-card-hover {
   transition: all 200ms ease-in-out;
 }
 .enterprise-card-hover:hover {
-  border-color: rgba(100, 116, 139, 0.8);
-  box-shadow: 0 6px 16px -2px rgba(11, 15, 25, 0.7);
+  border-color: rgba(96, 165, 250, 0.8);
+  box-shadow: 0 10px 28px -2px rgba(7, 12, 24, 0.9);
 }
 
 @utility badge-financial {
@@ -59,8 +69,8 @@ html {
 
 body {
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  background-color: #0b0f19;
-  color: #f8fafc;
+  background-color: var(--background);
+  color: var(--foreground);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -76,17 +86,44 @@ code, .font-mono {
 }
 
 ::-webkit-scrollbar-track {
-  background-color: #0b0f19;
+  background-color: #070c18;
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #1e293b;
+  background-color: #1e3a8a;
   border-radius: 9999px;
   transition: background-color 200ms;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background-color: #334155;
+  background-color: #3b82f6;
+}
+
+/* Orbit & Ripple Animations */
+@keyframes ripple {
+  0%, 100% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(0.9);
+  }
+}
+
+@keyframes orbit {
+  0% {
+    transform: rotate(0deg) translateY(calc(var(--radius) * 1px)) rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg) translateY(calc(var(--radius) * 1px)) rotate(-360deg);
+  }
+}
+
+.animate-ripple {
+  animation: ripple 2s ease infinite;
+}
+
+.animate-orbit {
+  animation: orbit calc(var(--duration, 20) * 1s) linear infinite;
 }
 
 @keyframes pulse-subtle {
@@ -97,33 +134,3 @@ code, .font-mono {
 .animate-pulse-subtle {
   animation: pulse-subtle 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
-
-@keyframes slideInRight {
-  0% {
-    transform: translateX(100%);
-    opacity: 0.3;
-  }
-  100% {
-    transform: translateX(0);
-    opacity: 1;
-  }
-}
-
-@keyframes fadeIn {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
-}
-
-.animate-slide-in-right {
-  animation: slideInRight 0.32s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-.animate-fade-in {
-  animation: fadeIn 0.22s ease-out forwards;
-}
-
-

@@ -18,8 +18,32 @@ from backend.app.models.user import User  # noqa: F401 — ensures users table i
 
 logger = logging.getLogger("financetwin")
 
+def _migrate_recovery_columns():
+    with engine.connect() as conn:
+        try:
+            cursor = conn.exec_driver_sql("PRAGMA table_info(recovery_cases)")
+            existing_cols = {row[1] for row in cursor.fetchall()}
+            if existing_cols:
+                cols_to_add = [
+                    ("priority_level", "VARCHAR(10) DEFAULT 'P2'"),
+                    ("financial_impact_score", "NUMERIC(5, 4)"),
+                    ("urgency_score", "NUMERIC(5, 4)"),
+                    ("severity_score", "NUMERIC(5, 4)"),
+                    ("historical_multiplier", "NUMERIC(5, 4) DEFAULT 1.00"),
+                    ("priority_reason", "VARCHAR(1000)"),
+                    ("priority_breakdown", "JSON"),
+                    ("priority_calculated_at", "DATETIME")
+                ]
+                for col_name, col_type in cols_to_add:
+                    if col_name not in existing_cols:
+                        conn.exec_driver_sql(f"ALTER TABLE recovery_cases ADD COLUMN {col_name} {col_type}")
+                conn.commit()
+        except Exception as e:
+            logger.warning(f"Column migration check note: {e}")
+
 def init_db():
     Base.metadata.create_all(bind=engine)
+    _migrate_recovery_columns()
     
     # Check if database has data seeded; if empty, automatically populate
     db = SessionLocal()
